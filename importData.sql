@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `bulletinboarddb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `bulletinboarddb`;
 -- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bulletinboarddb
@@ -148,14 +150,6 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES ('1234567890','Mi Mi Ko','scm.mimiko@gmail.com','327793fb42927184ee691bda82cedf253efcd4a7880c5abca30a658e896b76a1','09971102115','Hledan','http://res.cloudinary.com/myanmar-seattle/image/upload/v1569558566/zpwjqrnweem9wvj6xhlt.jpg','0','2019/12/16','2019-12-25T09:13:51+06:30','2019-12-25T09:13:51+06:30',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'bulletinboarddb'
---
-
---
--- Dumping routines for database 'bulletinboarddb'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -166,4 +160,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-02 17:51:42
+-- Dump completed on 2020-01-02 18:21:42
