@@ -4,19 +4,20 @@
 
 ### How to start local server
 First time only, please run following commands.
-npm install
+* npm install
+
 Then,you can run the project with following command.
-npm run dev
+* npm run dev
 
 ### Import Data to MySql Database
 You can use following file to import database.
- importData.sql
+* importData.sql
 
 ### DefaultAdminUser 
 You can Login with the following user after imported sql file.
-email - scm.mimiko@gmail.com
-password - 105243mc
+* email - scm.mimiko@gmail.com
+* password - 105243mc
 
 ### Local Endpoint
-http://localhost:3000
+* http://localhost:3000
 
