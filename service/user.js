@@ -57,7 +57,7 @@ class UserService extends AbstractService {
     try {
       const user = await Model.User.getByLogin(params);
       if (user == undefined) {
-        return super.failed(404, "Email or password is wrong.");
+        return super.failed(403, "Email or password is wrong.");
       }
       const tokenString = Util.randomString(64);
       await Model.Token.save(user.email, user.id, tokenString);
@@ -85,7 +85,7 @@ class UserService extends AbstractService {
   }
 
   static async updateUser(userUpdateParams) {
-    try {            
+    try {
       const tokenUser = await Model.Token.getByTokenString(userUpdateParams.headers.authorization);
       const currentUser = await Model.User.getById(tokenUser.created_user_id);
 

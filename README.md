@@ -1,28 +1,22 @@
 # Bulletinboard-API-Express
 
-## Project setup
-```
+#Project Setup
+
+###How to start local server
+First time only, please run following commands.
 npm install
-```
-
-### Run project
-```
+Then,you can run the project with following command.
 npm run dev
-```
 
-### Import Data to MySql Database
-#### Use Following file in project
+###Import Data to MySql Database
+You can use following file to import database.
+ importData.sql
 
-```
-importData.sql
-
-```
-
-### Admin User
-#### Can Login with the following user after imported sql file
-
-```
+###DefaultAdminUser 
+You can Login with the following user after imported sql file.
 email - scm.mimiko@gmail.com
 password - 105243mc
 
-```
+###Local Endpoint
+http://localhost:3000
+
