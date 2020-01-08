@@ -20,8 +20,9 @@ class UserService extends AbstractService {
         throw new CustomError("This email is already registered.", 409);
       }
       var user = await Model.User.create(userCreateParams);
-      await Email.send(user.email);
-
+      var subject = "sign_up success";
+      var text = "Your Signup Complete Successfully !!"
+      await Email.send(user.email,subject,text);
       return super.success(null, {
         user: user
       });
@@ -123,20 +124,22 @@ class UserService extends AbstractService {
     try {
       const tokenUser = await Model.Token.getByTokenString(params.headers.authorization);
       const currentUser = await Model.User.getById(tokenUser.created_user_id);
-
+      const changeUser = await Model.User.getById(params.params.id);
       if (!params.body.oldPassword) {
         throw new CustomError('Current Password is required!', 404);
       }
 
       const oldPasswordHash = Model.User.hashPassword(params.body.oldPassword);
-      if (currentUser.password !== oldPasswordHash) {
-        return super.failed(null, { message: "Incorrect old password can not get access to change new password" });
-      } else if (params.body.newPassword !== params.body.confirmPassword) {
+      // if (currentUser.password !== oldPasswordHash) {
+      //   return super.failed(null, { message: "Incorrect old password can not get access to change new password" });
+      // } else
+      if (params.body.newPassword !== params.body.confirmPassword) {
         return super.failed(null, { message: "New password and confirm password must be same." });
       }
-
       await Model.User.change(params.body, currentUser.id);
-
+      var subject = "password change success";
+      var text = "Your Password Changing Complete Successfully !!"
+      await Email.send(changeUser.email,subject,text);
       return super.success(null, {
         message: "Password changing successfully."
       });

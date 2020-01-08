@@ -8,9 +8,9 @@ const CustomErrors = require("../utils/customErrors");
 const CustomError = CustomErrors.CustomError;
 const config = require('../config/env.json');
 
-cloudinary.config({ 
-  cloud_name: config.Cloudinary.cloud_name, 
-  api_key: config.Cloudinary.api_key, 
+cloudinary.config({
+  cloud_name: config.Cloudinary.cloud_name,
+  api_key: config.Cloudinary.api_key,
   api_secret: config.Cloudinary.api_secret
 });
 
@@ -30,24 +30,24 @@ class UserModel extends AbstractModel {
         this.updated_at = params.updated_at;
         this.deleted_at = params.deleted_at;
     }
-    
-    static async create(params) {    
-        const id =super.generateId();        
+
+    static async create(params) {
+        const id =super.generateId();
         var profile = null;
         if(params.profile) {
             var uploadImage = await cloudinary.uploader.upload(params.profile);
             profile = uploadImage.url;
-        } 
+        }
         let birthDate = new Date(params.dob);
         params.dob =
             birthDate.getFullYear() +
             "/" +
             (birthDate.getMonth() + 1) +
             "/" +
-            (birthDate.getDate() < 10 ? "0" + birthDate.getDate() : birthDate.getDate());          
+            (birthDate.getDate() < 10 ? "0" + birthDate.getDate() : birthDate.getDate());
         const user = {
             id: id,
-            name: params.name, 
+            name: params.name,
             email: params.email,
             password: this.hashPassword(params.password),
             phone: params.phone,
@@ -61,13 +61,13 @@ class UserModel extends AbstractModel {
         };
         connection.query('INSERT INTO users SET ?', user, function(err) {
             if(err) return err;
-        });    
+        });
         return this.toModel(user);
     }
 
-    static async update(params, userId) {        
+    static async update(params, userId) {
         var oldUserData = await this.getById(userId);
-        var imageFilePath = oldUserData.profile;        
+        var imageFilePath = oldUserData.profile;
         var userProfile;
         let birthDate = new Date(params.dob);
         params.dob =
@@ -75,9 +75,9 @@ class UserModel extends AbstractModel {
             "/" +
             (birthDate.getMonth() + 1) +
             "/" +
-            (birthDate.getDate() < 10 ? "0" + birthDate.getDate() : birthDate.getDate());       
+            (birthDate.getDate() < 10 ? "0" + birthDate.getDate() : birthDate.getDate());
         if( params.profile != imageFilePath) {
-            var uploadImage = await cloudinary.uploader.upload(params.profile, function(result) { return result.url; });            
+            var uploadImage = await cloudinary.uploader.upload(params.profile, function(result) { return result.url; });
             if( imageFilePath ) {
                 var firstSplitVar = imageFilePath.split("/");
                 var secondSplitVar = firstSplitVar[7].split(".");
@@ -102,14 +102,14 @@ class UserModel extends AbstractModel {
             deleted_at: null
         };
         const query = "update users SET ? where id ='"+ userId +"'";
-        
+
         connection.query(query, user, function(err) {
             if(err) return err;
-        });           
+        });
         return this.toModel(user);
     }
 
-    static async getAllUser(searchData) {         
+    static async getAllUser(searchData) {
         var result = {};
         if(searchData && (searchData.name || searchData.email)) {
             result = await connection.query(`SELECT * FROM users WHERE name ='${searchData.name}' || email ='${searchData.email}'`);
@@ -121,7 +121,7 @@ class UserModel extends AbstractModel {
 
     static async getById( id ) {
         const result = await connection.query(`SELECT * FROM users WHERE id = '${id}'`);
-        
+
         return result[0];
     }
 
@@ -133,7 +133,7 @@ class UserModel extends AbstractModel {
         const passwordHash = this.hashPassword(params.password);
         const query_str = `SELECT * FROM users WHERE email= '${params.email}' AND password= '${passwordHash}'`;
         const result = await connection.query(query_str);
-        
+
         return result[0];
       }
 
@@ -147,18 +147,18 @@ class UserModel extends AbstractModel {
             const secondSplitVar = firstSplitVar[7].split(".");
             await cloudinary.uploader.destroy(secondSplitVar[0]);
         }
-        
+
         return result;
     }
 
     static async getByEmail(email) {
-        const result = await connection.query(`SELECT * FROM users WHERE email= '${email}'`);        
+        const result = await connection.query(`SELECT * FROM users WHERE email= '${email}'`);
 
         return result;
     }
 
     static async getByName(userName) {
-        const result = await connection.query(`SELECT * FROM users WHERE name= '${userName}'`);        
+        const result = await connection.query(`SELECT * FROM users WHERE name= '${userName}'`);
 
         return result;
     }
@@ -188,7 +188,7 @@ class UserModel extends AbstractModel {
 			this.validateEmail(params.email),
 			this.validatePassword(params.password),
 		];
-    
+
 		const errors = results.filter(value => {
 			return value !== null;
 		});
@@ -221,7 +221,7 @@ class UserModel extends AbstractModel {
 
         return errors;
     }
-    
+
     static validatePasswordUpdateParams(params) {
         if (!params) {
             return [{
@@ -245,7 +245,7 @@ class UserModel extends AbstractModel {
         return errors;
 
     }
-    
+
     static hashPassword(password) {
         let passwordHash = process.env.SALT_KEY + password;
         for (var i = 0; i < 3; i++) {
@@ -259,7 +259,7 @@ class UserModel extends AbstractModel {
 
     static validateEmail(value, field = 'email', name = 'Email') {
         if (value === null || value === undefined) return null;
-        
+
 		let error = null;
 
 		error = CustomValidator.isString(value, field, name);
