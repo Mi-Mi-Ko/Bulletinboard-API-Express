@@ -15,9 +15,9 @@ class CommentModel extends AbstractModel {
         this.updated_at = params.updated_at;
         this.deleted_at = params.deleted_at;
     }
-    
-    static create(currentUser, params) {            
-        const id =super.generateId();        
+
+    static create(currentUser, params) {
+        const id =super.generateId();
         const commentCreateParams = {
             id : id,
             comment: params.comment,
@@ -29,7 +29,7 @@ class CommentModel extends AbstractModel {
             updated_at: Moment().format(),
             deleted_at: null
           };
-        connection.query('INSERT INTO comments SET ?', commentCreateParams);    
+        connection.query('INSERT INTO comments SET ?', commentCreateParams);
         return commentCreateParams;
     }
 
@@ -44,17 +44,17 @@ class CommentModel extends AbstractModel {
             updated_at: Moment().format(),
             deleted_at: null
           };
-        
+
         const query = `update comments SET ? where id ='${commentId}' `;
-        
-        connection.query(query, commentUpdateParams);       
+
+        connection.query(query, commentUpdateParams);
         return commentUpdateParams;
     }
 
     static async getAllComment(searchData) {
-        var result = {}; 
+        var result = {};
         var postedCreater = null;
-                
+
         if(searchData) {
             if(!searchData.createdUser && searchData.postId) {
                 result = await connection.query(`SELECT * FROM comments WHERE post_id ='${ searchData.postId }' ORDER BY created_at desc`);
@@ -71,32 +71,32 @@ class CommentModel extends AbstractModel {
             } else {
                 result = await connection.query(`SELECT * FROM comments ORDER BY created_at desc`);
             }
-        } 
-        
+        }
+
         return result;
     }
 
-    static async getById(id) {        
+    static async getById(id) {
         const result = await connection.query(`SELECT * FROM comments WHERE id = '${id}'`);
-        
+
         return result[0];
     }
 
-    static async getByPostId(postId) {        
+    static async getByPostId(postId) {
         const result = await connection.query(`SELECT * FROM comments WHERE post_id = '${postId}' ORDER BY created_at desc`);
-        
+
         return result;
     }
 
-    static async getByUserId(userId) {                
+    static async getByUserId(userId) {
         var result = await connection.query(`SELECT * FROM comments WHERE created_user_id = '${userId}' ORDER BY created_at desc`);
 
         return result;
     }
 
-    static async delete(currentUser, id){        
+    static async delete(currentUser, id){
         const result = await connection.query(`DELETE from comments WHERE id = '${id}' AND created_user_id = '${currentUser.created_user_id}'`);
-        
+
         return result;
     }
 
@@ -113,7 +113,7 @@ class CommentModel extends AbstractModel {
           updated_at: item.updated_at !== undefined ? item.updated_at : null,
           deleted_at: item.deleted_at !== undefined ? item.deleted_at : null
         };
-        
+
         return new CommentModel(params);
     }
 }

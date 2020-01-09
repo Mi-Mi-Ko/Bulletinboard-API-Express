@@ -4,10 +4,10 @@ const nodeMailer = require('nodemailer');
 const config = require('../config/env.json');
 
 /**
- * @param {Object} params 
+ * @param {Object} params
  * @return {Object}
  */
-module.exports.send = (userEmail) => {
+module.exports.send = (userEmail,subject,text) => {
 	let transporter = nodeMailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
@@ -21,11 +21,11 @@ module.exports.send = (userEmail) => {
         }
     });
     let mailOptions = {
-        from: config.Email.email, 
-        to: userEmail, 
-        subject: "Sign up completed message", 
-        text: "Complete Successfully", 
-        html: '<b>Signed up Successfully . Welcome to Bulletin Board!</b>' 
+        from: config.Email.email,
+        to: userEmail,
+        subject: subject,
+        text: text,
+        html: '<b>Welcome to Bulletin Board!</b>'
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
