@@ -20,14 +20,14 @@ class PostModel extends AbstractModel {
         this.updated_at = params.updated_at;
         this.deleted_at = params.deleted_at;
     }
-    
-    static create(currentUser, params) {    
+
+    static create(currentUser, params) {
         const validationErrors = this.validateCreateParams(params);
         if (validationErrors.length > 0) {
             return new CustomError('Invalid input', 400, validationErrors);
         }
 
-        const id =super.generateId();        
+        const id =super.generateId();
         const postCreateParams = {
             id : id,
             title: params.title,
@@ -40,7 +40,7 @@ class PostModel extends AbstractModel {
             updated_at: Moment().format(),
             deleted_at: null
           };
-        connection.query('INSERT INTO posts SET ?', postCreateParams);    
+        connection.query('INSERT INTO posts SET ?', postCreateParams);
         return postCreateParams;
     }
 
@@ -50,7 +50,7 @@ class PostModel extends AbstractModel {
                 throw new CustomError('Invalid input', 400, validationErrors);
             }
         const item = await this.create(params);
-    
+
         return item;
     }
 
@@ -66,16 +66,16 @@ class PostModel extends AbstractModel {
             updated_at: Moment().format(),
             deleted_at: null
         };
-        
+
         const query = `update posts SET ? where id ='${postId}' `;
-        
-        connection.query(query, postUpdateParams);       
+
+        connection.query(query, postUpdateParams);
         return postUpdateParams;
     }
 
     static async getAllPost(searchData) {
-        var result = []; 
-        var creater = null;        
+        var result = [];
+        var creater = null;
         if(searchData) {
             if(!searchData.createdUser && searchData.title) {
                 result = await connection.query(`SELECT * FROM posts WHERE title ='${searchData.title}' ORDER BY created_at desc`);
@@ -93,29 +93,29 @@ class PostModel extends AbstractModel {
                 result = await connection.query(`SELECT * FROM posts ORDER BY created_at desc`);
             }
         }
-        
+
         return result;
     }
 
-    static async getById(id) {        
+    static async getById(id) {
         const result = await connection.query(`SELECT * FROM posts WHERE id = '${id}'`);
-        
+
         return result[0];
     }
 
-    static async getByUserId(userId) {                
+    static async getByUserId(userId) {
         var result = await connection.query(`SELECT * FROM posts WHERE created_user_id = '${userId}' ORDER BY created_at desc`);
 
         return result;
     }
 
-    static async delete(currentUser, id){                
+    static async delete(currentUser, id){
         const result = await connection.query(`DELETE from posts WHERE id = '${id}' AND created_user_id = '${currentUser.created_user_id}'`);
-        
+
         return result;
     }
 
-    static async getByTitle(currentUser, postTitle) {        
+    static async getByTitle(currentUser, postTitle) {
         const result = await connection.query(`SELECT * FROM posts WHERE title = '${postTitle}' AND created_user_id = '${currentUser.created_user_id}' ORDER BY created_at desc `);
 
         return result;
@@ -136,14 +136,14 @@ class PostModel extends AbstractModel {
             CustomValidator.isRequired(params.title, 'title', 'Title'),
             CustomValidator.isRequired(params.description, 'description', 'Description'),
 		];
-    
+
 		const errors = results.filter(value => {
 			return value !== null;
 		});
 
 		return errors;
     }
-  
+
 	static validateTitle(value, field = 'password', name = 'Password') {
 
 		if (value === null || value === undefined) return null;
@@ -185,7 +185,7 @@ class PostModel extends AbstractModel {
           updated_at: item.updated_at !== undefined ? item.updated_at : null,
           deleted_at: item.deleted_at !== undefined ? item.deleted_at : null
         };
-        
+
         return new PostModel(params);
     }
 }

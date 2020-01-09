@@ -7,19 +7,19 @@ const Model = require('../model');
 const cloudinary = require('cloudinary');
 const config = require('../config/env.json');
 
-cloudinary.config({ 
-    cloud_name: config.Cloudinary.cloud_name, 
-    api_key: config.Cloudinary.api_key, 
+cloudinary.config({
+    cloud_name: config.Cloudinary.cloud_name,
+    api_key: config.Cloudinary.api_key,
     api_secret: config.Cloudinary.api_secret
   });
 
 class Excel {
-    static async generate(user) {           
+    static async generate(user) {
         const workbook = new Exceljs.Workbook();
         await workbook.csv.readFile('excel/templates/postList.csv');
         const sheetName = `sheet1`;
-        const sheet = workbook.getWorksheet(sheetName);  
-                      
+        const sheet = workbook.getWorksheet(sheetName);
+
         const posts = await Model.Post.getByUserId(user.created_user_id);
         let row = 2, number =1;
         for( let post of posts) {
@@ -37,7 +37,7 @@ class Excel {
             row++;
             number++;
         }
-        
+
         workbook.views = [
         {
             width: 20000,
@@ -46,7 +46,7 @@ class Excel {
         }
     ];
     const base64 = await this.toBase64(workbook);
-    
+
     const filename = `${moment().valueOf()}_post.csv`;
     return {
         data: base64,
@@ -60,14 +60,10 @@ class Excel {
  * @return {string}
  */
     static async toBase64(workbook) {
-        const tmpFilename = `${moment().valueOf()}.csv`;
-        const tmpFilepath = `./excel/templates/${tmpFilename}`;
-        
-        await workbook.csv.writeFile(tmpFilepath);
-
-        const binary = fs.readFileSync(tmpFilepath);
+        await workbook.csv.writeFile('excel/templates/postList.csv');
+        const binary = fs.readFileSync('excel/templates/postList.csv');
         const base64 = Buffer.from(binary).toString('base64');
-        
+
         return base64;
     }
 }
