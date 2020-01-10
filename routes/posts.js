@@ -15,9 +15,11 @@ router.post('/add', Auth.userRole,
 );
 
 router.post('/upload', Auth.userRole,
+
   async function(req, res) {
     const result = await PostService.createMultiplePosts(req);
-    res.status(result.body.statusCode).send({ post : result });
+    console.log("result",result);
+   res.status(result.body.statusCode).send({ post : result });
   }
 )
 // GET ALL POST

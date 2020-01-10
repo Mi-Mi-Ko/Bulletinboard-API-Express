@@ -47,10 +47,8 @@ class Excel {
     ];
     const base64 = await this.toBase64(workbook);
 
-    const filename = `${moment().valueOf()}_post.csv`;
     return {
-        data: base64,
-        filename
+        data: base64
     };
 }
 
