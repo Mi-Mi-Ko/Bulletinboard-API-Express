@@ -11,7 +11,7 @@ router.post('/add', Auth.userRole,
 );
 
 // GET ALL USER
-router.get('/users', Auth.userRole,
+router.get('/userList', Auth.userRole,
   async function (req, res) {
     var result = await UserService.getAllUsers(req);
     res.status(result.body.statusCode).send({ user: result });
