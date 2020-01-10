@@ -7,31 +7,39 @@ const config = require('../config/env.json');
  * @param {Object} params
  * @return {Object}
  */
-module.exports.send = (userEmail,subject,text) => {
-	let transporter = nodeMailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            user: config.Email.email,
-            pass: config.Email.password
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
+class Email {
+  static async send(userEmail, subject, text) {
+    var errorMessage = "";
+    // create reusable transporter object using the default SMTP transport
+    var transporter = nodeMailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: config.Email.email,
+        pass: config.Email.password
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
-    let mailOptions = {
-        from: config.Email.email,
-        to: userEmail,
-        subject: subject,
-        text: text,
-        html: '<b>Welcome to Bulletin Board!</b>'
-    };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
+    // setup e-mail data with unicode symbols
+    var mailOptions = {
+      from: config.Email.email,
+      to: userEmail,
+      subject: subject,
+      text: text,
+      html: '<b>Welcome to Bulletin Board!</b>'
+    };
+     return await new Promise((resolve, reject) => {
+      transporter.sendMail(mailOptions, (error, hash) => {
+        if (!error) {
+          resolve(hash);
         }
-        res.render('index');
-    });
-};
+        reject(error);
+      });
+    })
+  }
+}
+module.exports = Email;

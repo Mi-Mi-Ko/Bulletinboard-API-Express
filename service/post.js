@@ -6,17 +6,17 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 class PostService extends AbstractService {
-    static async createPost(params) {       
+    static async createPost(params) {
         try {
             const postCreateParams = {
                 ...params.body
             };
             const tokenUser = await Model.Token.getByTokenString(params.headers.authorization);
-            const post = await Model.Post.create(tokenUser, postCreateParams);  
-        
+            const post = await Model.Post.create(tokenUser, postCreateParams);
+
             return super.success(null, {
                 post: post
-            });  
+            });
         } catch (error) {
             return super.failed(error, "An error occurred while creating post.");
         }
@@ -25,8 +25,8 @@ class PostService extends AbstractService {
     static async createMultiplePosts(params) {
         try {
             var dataString = params.body.uploadFileData;
-            var base64Data = dataString.split(";base64,");            
-            
+            var base64Data = dataString.split(";base64,");
+
             await fs.writeFile("sample.csv", base64Data[1], 'base64', (err) => {
                 if (err) throw err;
             });
@@ -34,15 +34,15 @@ class PostService extends AbstractService {
             var results = [];
             fs.createReadStream('sample.csv')
             .pipe(csv())
-            .on('data', (data) => 
+            .on('data', (data) =>
              results.push(data))
             .on('end', () => {
                 for(var row = 0; row<results.length; row++) {
                     var params = {};
                     params.title = results[row].Title;
                     params.description = results[row].Description;
-                    params.status = results[row].Status;                    
-                    Model.Post.create(tokenUser, params); 
+                    params.status = results[row].Status;
+                    Model.Post.create(tokenUser, params);
                 }
             });
         } catch (error) {
@@ -53,7 +53,7 @@ class PostService extends AbstractService {
     static async getAllPosts(params) {
         try {
             const posts = await Model.Post.getAllPost(params.query);
-    
+
             return super.success(null, {
                 posts: posts
             });
@@ -69,7 +69,7 @@ class PostService extends AbstractService {
             if(!post) {
                 throw new CustomError("Post not found!", 404);
             }
-            
+
             return super.success(null, {
                 post: post
             });
@@ -79,36 +79,36 @@ class PostService extends AbstractService {
     }
 
     static async getPostByTitle(data) {
-        try {                        
+        try {
             const tokenUser = await Model.Token.getByTokenString(data.headers.authorization);
             const post = await Model.Post.getByTitle(tokenUser, data.params.title);
-            
+
             if(!post) {
                 throw new CustomError("Post not found!", 404);
             }
-            
+
             return super.success(null, {
                 post: post
             });
         } catch (error) {
             return super.failed(error, "An error occurred while retrieving the post by id.");
         }
-    } 
+    }
 
     static async updatedPost(postUpdateParam) {
-        try {                      
+        try {
           const tokenUser = await Model.Token.getByTokenString(postUpdateParam.headers.authorization);
           const post = await Model.Post.getById(postUpdateParam.params.id);
-          
+
           if (!post) {
             throw new CustomError('Cannot get access to update for this post.', 401);
           }
-          
+
           const updatedPost = await Model.Post.update(tokenUser, postUpdateParam.body, postUpdateParam.params.id);
-  
+
           return super.success(null, {
             post : updatedPost
-          }); 
+          });
         } catch (error) {
           return super.failed(error, "An error while updating the post.");
         }
@@ -118,12 +118,12 @@ class PostService extends AbstractService {
         try {
           const tokenUser = await Model.Token.getByTokenString(data.headers.authorization);
           const post = await Model.Post.getById(data.params.id);
-  
+
           if(!post){
             return super.failed( null, { message:"Post not found!" } );
           }
           await Model.Post.delete(tokenUser, data.params.id);
-    
+
           return super.success(null, {
             post: post
           });

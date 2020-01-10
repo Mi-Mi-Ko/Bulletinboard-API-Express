@@ -6,7 +6,7 @@ const Util = require("../utils/util");
 const Email = require("../utils/email");
 const CustomErrors = require("../utils/customErrors");
 const CustomError = CustomErrors.CustomError;
-
+var sendEmail;
 class UserService extends AbstractService {
   static async createUser(params) {
     try {
@@ -22,7 +22,7 @@ class UserService extends AbstractService {
       var user = await Model.User.create(userCreateParams);
       var subject = "sign_up success";
       var text = "Your Signup Complete Successfully !!"
-      await Email.send(user.email,subject,text);
+      sendEmail = await Email.send(user.email, subject, text);
       return super.success(null, {
         user: user
       });
@@ -96,7 +96,10 @@ class UserService extends AbstractService {
       const user = await Model.User.update(userUpdateParams.body, userUpdateParams.params.id);
       var subject = "update information success";
       var text = "Your Updating is Complete Successfully !!"
-      await Email.send(user.email,subject,text);
+      sendEmail = await Email.send(user.email, subject, text);
+      if (!sendEmail) {
+        throw new CustomError("Failed in email send processing.", 500);
+      }
       return super.success(200, {
         user: user
       });
@@ -114,7 +117,10 @@ class UserService extends AbstractService {
       }
       var subject = "delete information success";
       var text = "Deleting User is Complete Successfully !!"
-      await Email.send(deleteUser.email,subject,text);
+      sendEmail = await Email.send(deleteUser.email, subject, text);
+      if (!sendEmail) {
+        throw new CustomError("Failed in email send processing.", 500);
+      }
       await Model.User.delete(id);
 
       return super.success(null, {
@@ -144,7 +150,7 @@ class UserService extends AbstractService {
       await Model.User.change(params.body, currentUser.id);
       var subject = "password change success";
       var text = "Your Password Changing Complete Successfully !!"
-      await Email.send(changeUser.email,subject,text);
+      await Email.send(changeUser.email, subject, text);
       return super.success(null, {
         message: "Password changing successfully."
       });
