@@ -22,7 +22,7 @@ class UserService extends AbstractService {
       var user = await Model.User.create(userCreateParams);
       var subject = "sign_up success";
       var text = "Your Signup Complete Successfully !!"
-      sendEmail = await Email.send(user.email, subject, text);
+      await Email.send(user.email, subject, text);
       return super.success(null, {
         user: user
       });
@@ -92,14 +92,10 @@ class UserService extends AbstractService {
       if (currentUser.type != 0 && userUpdateParams.params.id != currentUser.id) {
         return super.failed(401, { message: 'Cannot get access to update for this user.' });
       }
-
       const user = await Model.User.update(userUpdateParams.body, userUpdateParams.params.id);
       var subject = "update information success";
       var text = "Your Updating is Complete Successfully !!"
-      sendEmail = await Email.send(user.email, subject, text);
-      if (!sendEmail) {
-        throw new CustomError("Failed in email send processing.", 500);
-      }
+      await Email.send(user.email, subject, text);
       return super.success(200, {
         user: user
       });
@@ -118,9 +114,6 @@ class UserService extends AbstractService {
       var subject = "delete information success";
       var text = "Deleting User is Complete Successfully !!"
       sendEmail = await Email.send(deleteUser.email, subject, text);
-      if (!sendEmail) {
-        throw new CustomError("Failed in email send processing.", 500);
-      }
       await Model.User.delete(id);
 
       return super.success(null, {

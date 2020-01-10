@@ -20,7 +20,6 @@ class UserModel extends AbstractModel {
         this.id = params.id;
         this.name = params.name;
         this.email = params.email;
-        this.password = params.password;
         this.profile = params.profile;
         this.type = params.type;
         this.phone = params.phone;
@@ -121,8 +120,7 @@ class UserModel extends AbstractModel {
 
     static async getById( id ) {
         const result = await connection.query(`SELECT * FROM users WHERE id = '${id}'`);
-
-        return result[0];
+        return this.toModel(result[0]);
     }
 
     static async getByLogin(params) {
@@ -134,7 +132,7 @@ class UserModel extends AbstractModel {
         const query_str = `SELECT * FROM users WHERE email= '${params.email}' AND password= '${passwordHash}'`;
         const result = await connection.query(query_str);
 
-        return result[0];
+        return this.toModel(result[0]);
       }
 
     static async delete(id){
@@ -148,19 +146,17 @@ class UserModel extends AbstractModel {
             await cloudinary.uploader.destroy(secondSplitVar[0]);
         }
 
-        return result;
+        return this.toModel(result);
     }
 
     static async getByEmail(email) {
         const result = await connection.query(`SELECT * FROM users WHERE email= '${email}'`);
-
-        return result;
+         return result;
     }
 
     static async getByName(userName) {
         const result = await connection.query(`SELECT * FROM users WHERE name= '${userName}'`);
-
-        return result;
+        return this.toModel(result);
     }
 
     static async change(params, id) {
@@ -306,7 +302,6 @@ class UserModel extends AbstractModel {
             id: item.id !== undefined ? item.id : null,
             name: item.name !== undefined ? item.name : null,
             email: item.email !== undefined ? item.email : null,
-            password: item.password !== undefined ? item.password : null,
             profile: item.profile !== undefined ? item.profile : null,
             type: item.type !== undefined ? item.type : null,
             phone: item.phone !== undefined ? item.phone : null,
