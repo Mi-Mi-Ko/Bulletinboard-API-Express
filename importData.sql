@@ -147,7 +147,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('1234567890','Mi Mi Ko','scm.mimiko@gmail.com','327793fb42927184ee691bda82cedf253efcd4a7880c5abca30a658e896b76a1','09971102115','Hledan','http://res.cloudinary.com/myanmar-seattle/image/upload/v1569558566/zpwjqrnweem9wvj6xhlt.jpg','0','2019/12/16','2019-12-25T09:13:51+06:30','2019-12-25T09:13:51+06:30',NULL);
+INSERT INTO `users` VALUES ('1234567890','Mi Mi Ko','scm.mimiko@gmail.com','aa99c654ecff808d3c07471f6c5a3b6b5dd729c705697b842d7aed2878f199f8','09971102115','Hledan','http://res.cloudinary.com/myanmar-seattle/image/upload/v1569558566/zpwjqrnweem9wvj6xhlt.jpg','0','2019/12/16','2019-12-25T09:13:51+06:30','2019-12-25T09:13:51+06:30',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
