@@ -1,4 +1,11 @@
 # Bulletinboard-API-Express
+* Bulletin Board is a social media project that nearly same as facebook app.
+* Is an backend project that's developed by using Node.Js, Express JS framework for retriving   network path as API.
+* And also use MYSQL database.
+* Can manage mainly three implementation as user, post and comment.
+* As end-user can posted own's posts and comment on another user's post.
+* You can use Postman and Insomnia software for API route testing as API Testing Tool.
+* The project is developed for beginners who learning Node.Js language and Express JS.
 
 # Project Setup
 
